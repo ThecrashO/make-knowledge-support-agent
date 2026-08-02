@@ -1,0 +1,519 @@
+{
+    "name": "Knowledge Support Agent",
+    "flow": [
+        {
+            "id": 2,
+            "module": "telegram:WatchUpdates",
+            "version": 1,
+            "parameters": {
+                "__IMTHOOK__": 2646793
+            },
+            "mapper": {},
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 0
+                },
+                "restore": {
+                    "parameters": {
+                        "__IMTHOOK__": {
+                            "data": {
+                                "editable": "false"
+                            },
+                            "label": "Knowledge Support Agent"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTHOOK__",
+                        "type": "hook:telegramapi",
+                        "label": "Webhook",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 7,
+            "module": "ai-local-agent:RunLocalAIAgent",
+            "version": 0,
+            "parameters": {
+                "makeConnectionId": 10221213
+            },
+            "mapper": {
+                "defaultModel": "gpt-5-mini",
+                "reasoningEffort": "low",
+                "systemPrompt": "Role: You are a friendly, polite, and professional Male Customer Support Representative for TechZone Myanmar. Your goal is to assist customers with store locations, business hours, policies, warranties, and troubleshooting in natural, polite Burmese.\r\n\r\nPersona & Gender Rules:\r\n- Gender Persona: You are a MALE customer support representative. ALWAYS use \"ကျွန်တော်\" (for \"I/me\") and \"ခင်ဗျာ\" (as the polite ending phrase). NEVER use \"ရှင့်\" or \"ကျွန်မ\".\r\n- Tone: Helpful, warm, polite, and natural conversational Burmese.\r\n- STRICT CONSTRAINT: NEVER use words like \"PDF\", \"Document\", \"Internal Documentation\", \"စာရွက်စာတမ်း\", \"စာရွက်ထဲက\", \"ဆာဗာထဲက\", \"Prompt\", or \"AI\". Treat all knowledge as your own store knowledge.\r\n\r\nHandling Unknown Information & Limitations:\r\n- Primary Source: Use the uploaded knowledge base to answer customer queries accurately.\r\n- Missing Info: If information is not in your knowledge base (e.g., parking availability), reply naturally like a real staff member. Example: \"ကားပါကင်နဲ့ ပတ်သက်တဲ့ အချက်အလက်ကိုတော့ လက်ရှိမှာ ကျွန်တော်တို့ အတိအကျ မသိရှိရသေးပါဘူးခင်ဗျာ။ ဆိုင်ဖုန်း +959 123 456 789 သို့ တိုက်ရိုက် ဆက်သွယ် မေးမြန်းပေးပါနော်။\"\r\n- NO FAKE ACTIONS: You are a text chat agent. NEVER offer to \"physically check the store\" or \"call the customer back\". Simply recommend the user to contact the hotline.\r\n\r\nResponse Formatting:\r\n- Keep responses short, clean, concise, and nicely formatted using Markdown bullet points.",
+                "message": "{{2.message}}",
+                "files": [],
+                "threadId": "{{2.message.from.id}}",
+                "modelConfig": {
+                    "recursionLimit": "300",
+                    "iterationsFromHistoryCount": "20"
+                },
+                "timeout": "",
+                "outputType": "text"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 0
+                },
+                "restore": {
+                    "parameters": {
+                        "makeConnectionId": {
+                            "label": "AI",
+                            "data": {
+                                "scoped": "true",
+                                "connection": "ai-provider"
+                            }
+                        }
+                    },
+                    "expect": {
+                        "defaultModel": {
+                            "mode": "chose",
+                            "label": "GPT-5 miniA balanced, quick choice for clearly defined tasks needing reliable answers rather than deep analysis"
+                        },
+                        "reasoningEffort": {
+                            "mode": "chose",
+                            "label": "Low"
+                        },
+                        "files": {
+                            "mode": "chose"
+                        },
+                        "outputType": {
+                            "label": "Text"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "makeConnectionId",
+                        "type": "account:ai-provider,openai-gpt-3,anthropic-claude,gemini-ai-q9zyjp,ai-agent-foundry-openai,ai-agent-foundry-non-openai,mistral-ai,cohere,groq,ai-agent-xai,amazon-bedrock,ai-agent-openai-compatible",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "defaultModel",
+                        "type": "select",
+                        "label": "Model",
+                        "required": true
+                    },
+                    {
+                        "name": "reasoningEffort",
+                        "type": "select",
+                        "label": "Reasoning effort",
+                        "validate": {
+                            "enum": [
+                                "low",
+                                "medium",
+                                "high"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "systemPrompt",
+                        "type": "text",
+                        "label": "Instructions"
+                    },
+                    {
+                        "name": "message",
+                        "type": "text",
+                        "label": "Input",
+                        "required": true
+                    },
+                    {
+                        "name": "files",
+                        "type": "array",
+                        "label": "Input files",
+                        "spec": [
+                            {
+                                "name": "fileName",
+                                "type": "filename",
+                                "label": "File name",
+                                "semantic": "file:name"
+                            },
+                            {
+                                "name": "data",
+                                "type": "buffer",
+                                "label": "Data",
+                                "semantic": "file:data"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "threadId",
+                        "type": "text",
+                        "label": "Conversation ID",
+                        "validate": {
+                            "max": 256
+                        }
+                    },
+                    {
+                        "name": "modelConfig",
+                        "type": "collection",
+                        "label": "Model configuration",
+                        "spec": [
+                            {
+                                "name": "tokenLimit",
+                                "type": "hidden",
+                                "label": "Max output tokens"
+                            },
+                            {
+                                "name": "recursionLimit",
+                                "type": "hidden",
+                                "label": "Steps per agent call"
+                            },
+                            {
+                                "name": "iterationsFromHistoryCount",
+                                "type": "number",
+                                "label": "Maximum conversation history"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "timeout",
+                        "type": "number",
+                        "label": "Step timeout",
+                        "validate": {
+                            "min": 120,
+                            "max": 600
+                        }
+                    },
+                    {
+                        "name": "outputType",
+                        "type": "select",
+                        "label": "Response format",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "text",
+                                "make-schema",
+                                "udt-schema"
+                            ]
+                        }
+                    }
+                ],
+                "advanced": true
+            },
+            "tools": [
+                {
+                    "name": "Generate a response",
+                    "description": "Generates a response from web search.",
+                    "flow": [
+                        {
+                            "id": 8,
+                            "module": "make-ai-web-search:generateAResponse",
+                            "version": 1,
+                            "parameters": {},
+                            "mapper": {
+                                "input": "{{7.input}}",
+                                "parseJson": false,
+                                "user_location": {
+                                    "type": "approximate"
+                                }
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 600,
+                                    "y": 250
+                                },
+                                "restore": {
+                                    "expect": {
+                                        "input": {
+                                            "extra": {
+                                                "aiHelp": "Enter your search query. For detailed guidance, visit our [Help Center](https://apps.make.com/make-ai-web-search). You can also include specific instructions for the AI to format output as JSON. In that case, make sure to enable the advanced __Parse JSON in response__ option below.",
+                                                "aiInstruction": "Only serch on the web when the information is not found on the knowledge base"
+                                            }
+                                        },
+                                        "parseJson": {
+                                            "mode": "chose"
+                                        },
+                                        "user_location": {
+                                            "nested": {
+                                                "country": {
+                                                    "mode": "chose"
+                                                },
+                                                "timezone": {
+                                                    "mode": "chose",
+                                                    "label": "Empty"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "expect": [
+                                    {
+                                        "name": "input",
+                                        "type": "text",
+                                        "label": "Text",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "parseJson",
+                                        "type": "boolean",
+                                        "label": "Parse JSON in response",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "user_location",
+                                        "spec": [
+                                            {
+                                                "name": "type",
+                                                "type": "hidden"
+                                            },
+                                            {
+                                                "name": "city",
+                                                "type": "text",
+                                                "label": "City"
+                                            },
+                                            {
+                                                "name": "country",
+                                                "type": "select",
+                                                "label": "Country"
+                                            },
+                                            {
+                                                "name": "region",
+                                                "type": "text",
+                                                "label": "Region"
+                                            },
+                                            {
+                                                "name": "timezone",
+                                                "type": "select",
+                                                "label": "Timezone"
+                                            }
+                                        ],
+                                        "type": "collection",
+                                        "label": "User Location"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Agent knowledge",
+                    "description": "Search uploaded files using semantic similarity to retrieve relevant facts and context needed to answer the user’s question. Use this tool when the answer depends on information contained in the uploaded documents.",
+                    "flow": [
+                        {
+                            "id": 9,
+                            "module": "knowledge:KnowledgeStandAlone",
+                            "version": 1,
+                            "parameters": {},
+                            "mapper": {
+                                "limit": "50",
+                                "query": "{{7.query}}",
+                                "fileIds": [],
+                                "filestorage": [
+                                    "b2ef8104-2d7e-4b35-b249-ed72883e8838"
+                                ]
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 600,
+                                    "y": 450
+                                },
+                                "restore": {
+                                    "expect": {
+                                        "query": {
+                                            "extra": {
+                                                "aiHelp": "A concise natural-language description of the information to look for. The query is embedded and matched by semantic similarity (cosine distance), so it should express intent and meaning, not exact phrasing, keywords, or technical instructions."
+                                            }
+                                        }
+                                    }
+                                },
+                                "expect": [
+                                    {
+                                        "name": "filestorage",
+                                        "type": "filestorage",
+                                        "label": "Knowledge files"
+                                    },
+                                    {
+                                        "name": "query",
+                                        "type": "text",
+                                        "label": "Search query",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "fileIds",
+                                        "type": "hidden",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "limit",
+                                        "type": "number",
+                                        "label": "Limit",
+                                        "required": true,
+                                        "validate": {
+                                            "max": 100,
+                                            "min": 1
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 6,
+            "module": "telegram:SendReplyMessage",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 10221204
+            },
+            "mapper": {
+                "text": "{{7.response}}",
+                "chatId": "{{2.message.chat.id}}",
+                "parseMode": "",
+                "replyMarkup": "",
+                "messageThreadId": "",
+                "replyToMessageId": "",
+                "replyMarkupAssembleType": "reply_markup_enter"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 600,
+                    "y": 0
+                },
+                "restore": {
+                    "expect": {
+                        "parseMode": {
+                            "label": "Empty"
+                        },
+                        "disableNotification": {
+                            "mode": "chose"
+                        },
+                        "replyMarkupAssembleType": {
+                            "label": "Enter the Reply Markup"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "telegram"
+                            },
+                            "label": "Knowledge Support Agent"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:telegram",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "chatId",
+                        "type": "text",
+                        "label": "Chat ID",
+                        "required": true
+                    },
+                    {
+                        "name": "text",
+                        "type": "text",
+                        "label": "Text",
+                        "required": true
+                    },
+                    {
+                        "name": "messageThreadId",
+                        "type": "number",
+                        "label": "Message Thread ID"
+                    },
+                    {
+                        "name": "parseMode",
+                        "type": "select",
+                        "label": "Parse Mode",
+                        "validate": {
+                            "enum": [
+                                "Markdown",
+                                "HTML"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "disableNotification",
+                        "type": "boolean",
+                        "label": "Disable Notifications"
+                    },
+                    {
+                        "name": "disableWebPagePreview",
+                        "type": "boolean",
+                        "label": "Disable Link Previews"
+                    },
+                    {
+                        "name": "replyToMessageId",
+                        "type": "number",
+                        "label": "Original Message ID"
+                    },
+                    {
+                        "name": "replyMarkupAssembleType",
+                        "type": "select",
+                        "label": "Enter/Assemble the Reply Markup Field",
+                        "validate": {
+                            "enum": [
+                                "reply_markup_enter",
+                                "reply_markup_assemble"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "replyMarkup",
+                        "type": "text",
+                        "label": "Reply Markup"
+                    }
+                ]
+            }
+        }
+    ],
+    "metadata": {
+        "instant": true,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": true,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "slots": null,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false,
+            "freshVariables": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "us2.make.com",
+        "notes": [
+            {
+                "moduleIds": [
+                    9
+                ],
+                "content": "<p>Upload your PDF documentation.</p>",
+                "isFilterNote": false,
+                "metadata": {
+                    "color": "#9138FE"
+                }
+            },
+            {
+                "moduleIds": [
+                    7
+                ],
+                "content": "<p>Describe your business/area of expertise of the agent in the prompt.</p><p></p><p>For best practices on using conversation IDs, cost savings, managing knowledge files, protecting your agent from common vulnerabilities and more, check out our <a href=\"https://academy.make.com/bundles/automation-to-ai-agents-advanced-builder\" target=\"_blank\">AI Agents course</a>.</p>",
+                "isFilterNote": false,
+                "metadata": {
+                    "color": "#9138FE"
+                }
+            }
+        ]
+    }
+}
