@@ -6,7 +6,7 @@ An AI-powered automated customer support Telegram Bot built on **Make.com**. It 
 
 ## 🔗 Quick Links
 
-- **🚀 Make.com Shared Scenario (1-Click Import):** [Clone Scenario on Make.com](https://us2.make.com/public/shared-scenario/GZmmJTjBnkz/knowledge-support-agent)
+- **🚀 Make.com Shared Scenario (1-Click Import):** [Clone Scenario on Make.com](https://us2.make.com/public/shared-scenario/nLJkutefBEu/knowledge-support-agent)
 - **📦 GitHub Repository:** [https://github.com/ThecrashO/make-knowledge-support-agent.git](https://github.com/ThecrashO/make-knowledge-support-agent.git)
 
 ---
