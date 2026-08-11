@@ -4,6 +4,8 @@
 
 **Make.com** ပေါ်မှာ တည်ဆောက်ထားတဲ့ AI-powered customer support Telegram Bot တစ်ခုပါ။ **RAG (Retrieval-Augmented Generation)** စွမ်းရည်ပါဝင်တဲ့ **AI Local Agent** ကို သုံးပြီး company ရဲ့ upload လုပ်ထားတဲ့ PDF documentation ပေါ်မူတည်ကာ customer မေးခွန်းများကို ဖြေကြားပေးပါတယ်၊ real-time **Web Search** fail-safe နဲ့ **Multi-turn Conversational Memory** ကလည်း backup အနေနဲ့ ပါဝင်ပါတယ်။
 
+![Scenario Flow](./workflow-diagram.png)
+
 ---
 
 ## 🎯 ဘာကြောင့် ဒီ Tool ကို ဖန်တီးထားလဲ
