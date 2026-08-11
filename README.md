@@ -4,6 +4,8 @@
 
 An AI-powered automated customer support Telegram Bot built on **Make.com**. It leverages an **AI Local Agent** with **RAG (Retrieval-Augmented Generation)** to answer customer questions based on uploaded company PDF documentation, backed by a real-time **Web Search** fail-safe and **Multi-turn Conversational Memory**.
 
+![Scenario Flow](./workflow-diagram.png)
+
 ---
 
 ## 🎯 Why This Exists
